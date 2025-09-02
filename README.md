@@ -104,35 +104,32 @@
 ---
 
 ## ▶️ 使用方法
-1. 克隆项目  
+ 1. 克隆项目  
    ```bash
    git clone https://github.com/yourname/campus-trade-system.git
 ````
 
-2. 安装依赖
+ 2. 安装依赖
 
    ```bash
    pip install -r requirements.txt
    ```
-3. 执行测试
+ 3. 执行测试
 
    ```bash
    python run.py
    ```
-4. 生成并查看报告
+ 4. 生成并查看报告
 
    ```bash
    allure serve report/
    ```
 
+
 ## 📌 后续优化方向
 
-* 增强并发与性能测试支持
-* 引入更完善的接口文档生成工具
-* 增加安全测试与权限校验用例
+- 增强并发与性能测试支持
+- 引入更完善的接口文档生成工具
+- 增加安全测试与权限校验用例
 
----
 
-## 🙋‍♂️ 作者
-
-本项目由 \[YourName] 独立开发与测试，欢迎交流与反馈。
