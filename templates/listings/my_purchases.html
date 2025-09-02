@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}我的购买 - Goods Cycle{% endblock %}
+
+{% block content %}
+<h2>我的购买</h2>
+<div class="row row-cols-1 row-cols-md-4 g-4">
+    {% for order in orders %}
+    <div class="col">
+        <div class="card h-100 shadow-sm position-relative">
+            {% if order.item.images.first %}
+            <img src="{{ order.item.images.first.image.url }}" class="card-img-top" alt="{{ order.item.title }}">
+            {% else %}
+            <img src="/static/img/no-image.png" class="card-img-top" alt="无图片">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ order.item.title }}</h5>
+                <p class="card-text">{{ order.item.description|truncatechars:40 }}</p>
+                <p class="card-text"><small class="text-muted">状态：已完成</small></p>
+                <a href="{% url 'item_detail' order.item.id %}" class="btn btn-outline-primary btn-sm">查看详情</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12"><p>暂无已完成订单。</p></div>
+    {% endfor %}
+</div>
+{% endblock %} 

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}收到的订单 - Goods Cycle{% endblock %}
+{% block content %}
+<h2>收到的订单</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>商品</th>
+            <th>买家</th>
+            <th>状态</th>
+            <th>下单时间</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td><a href="{% url 'item_detail' order.item.id %}">{{ order.item.title }}</a></td>
+            <td>{{ order.buyer.username }}</td>
+            <td>{{ order.get_status_display }}</td>
+            <td>{{ order.created_at|date:'Y-m-d H:i' }}</td>
+            <td>
+                {% if order.status != 'completed' %}
+                <form action="{% url 'complete_order' order.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-success">标记为已完成</button>
+                </form>
+                {% else %}
+                <span class="text-success">已完成</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">暂无订单</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %} 

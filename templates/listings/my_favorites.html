@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load favorite_tags %}
+
+{% block title %}我的收藏 - Goods Cycle{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">我的收藏</h2>
+<div class="row row-cols-1 row-cols-md-4 g-4">
+    {% for item in items %}
+    <div class="col">
+        <div class="card h-100 shadow-sm position-relative">
+            {% if item.images.first %}
+            <img src="{{ item.images.first.image.url }}" class="card-img-top" alt="{{ item.title }}">
+            {% else %}
+            <img src="/static/img/no-image.png" class="card-img-top" alt="无图片">
+            {% endif %}
+            <button class="btn btn-link position-absolute top-0 end-0 m-2 p-0" style="z-index:2;" onclick="toggleFavorite({{ item.id }}, this)">
+                <span class="fa{% if user.is_authenticated and item|is_favorited:user %}s{% else %}r{% endif %} fa-star" style="color: {% if user.is_authenticated and item|is_favorited:user %}#FFD700{% else %}#ccc{% endif %}; font-size: 1.5em;"></span>
+            </button>
+            <div class="card-body">
+                <h5 class="card-title">{{ item.title }}</h5>
+                <p class="card-text text-success fw-bold">¥{{ item.price }}</p>
+                <p class="card-text">{{ item.description|truncatechars:60 }}</p>
+            </div>
+            <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
+                <small class="text-muted">{{ item.created_at|date:"Y-m-d" }}</small>
+                <a href="{% url 'item_detail' item.id %}" class="btn btn-sm btn-outline-success">查看详情</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <p class="text-muted">暂无收藏商品</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function toggleFavorite(itemId, btn) {
+    fetch(`/listings/favorite/${itemId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const star = btn.querySelector('span');
+        if (data.result === 'favorited') {
+            star.classList.remove('fa-star-o');
+            star.classList.add('fa-star');
+            star.style.color = '#FFD700';
+        } else {
+            star.classList.remove('fa-star');
+            star.classList.add('fa-star-o');
+            star.style.color = '#ccc';
+        }
+        Swal.fire({
+            icon: 'success',
+            title: data.message,
+            timer: 1200,
+            showConfirmButton: false
+        });
+    });
+}
+</script>
+{% endblock %} 
